@@ -1,7 +1,7 @@
 {
-    "git_url": "https://github.com/guillaume-haerinck/qt5.git",
-    "git_tag": "6.9.1-o3de",
-    "git_commit": "8251a04bb2ecc41f59771fb3e80a79d5188098c2",
+    "git_url": "https://github.com/qt/qt5.git",
+    "git_tag": "6.8.3",
+    "git_commit": "bab1fecd556ea561c4a89686293116741acfa1b4",
     "package_name": "qt",
     "package_url": "https://www.qt.io/",
     "package_license": "LGPL-3.0",
@@ -11,7 +11,7 @@
     "Platforms": {
         "Windows": {
             "Windows": {
-                "package_version": "6.9.1-rev1",
+                "package_version": "6.8.3-rev1",
                 "depends_on_packages": [
                     ["OpenSSL-1.1.1o-rev1-windows", "52b9d2bc5f3e0c6e405a0f290d1904bf545acc0c73d6a52351247d917c4a06d2", ""],
                     ["tiff-4.2.0.15-rev3-windows", "c6000a906e6d2a0816b652e93dfbeab41c9ed73cdd5a613acd53e553d0510b60", ""],

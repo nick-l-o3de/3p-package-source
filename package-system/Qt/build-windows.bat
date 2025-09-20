@@ -42,18 +42,22 @@ cd %BUILD_PATH%
 
 set _OPTS=-prefix %TARGET_INSTALL_ROOT% ^
     -submodules %QTARRAY% ^
+    -platform win32-msvc ^
     -debug-and-release ^
+    -c++std c++20 ^
     -force-debug-info ^
+    -separate-debug-info ^
     -opensource ^
-    -shared ^
-    -opengl dynamic ^
-    -openssl-linked
+    -confirm-license ^
+    -no-feature-accessibility ^
+    -- -Wno-dev
 
 cmd /c ""%BUILD_ROOT%\configure.bat" %_OPTS%" || goto FAILURE
 
 cmd /c cmake --build . --parallel || goto FAILURE
 
-cmd /c ninja install || goto FAILURE
+cmd /c cmake --install . --config Debug || goto FAILURE
+cmd /c cmake --install . --config RelWithDebInfo || goto FAILURE
 
 :FINISH
 exit
