@@ -253,6 +253,7 @@ function(ly_qt_qrc_target TARGET all_qrc_sources)
             SKIP_AUTOMOC TRUE
             SKIP_AUTOUIC TRUE
             SKIP_AUTORCC TRUE
+            SKIP_UNITY_BUILD_INCLUSION TRUE
             GENERATED TRUE
         )
         list(APPEND all_qrc_wrapped_sources ${outfile})
