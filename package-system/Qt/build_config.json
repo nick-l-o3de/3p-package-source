@@ -19,6 +19,9 @@
                 ],
                 "custom_build_cmd": [
                     "build-windows.bat"
+                ],
+                "custom_install_cmd": [
+                    "{python}", "copy_platform_cmakes.py"
                 ]
             }
         },

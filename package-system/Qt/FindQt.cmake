@@ -46,10 +46,10 @@ include(${CMAKE_CURRENT_LIST_DIR}/Platform/${PAL_PLATFORM_NAME}/Qt_${PAL_PLATFOR
 list(APPEND CMAKE_PREFIX_PATH ${QT_LIB_PATH}/cmake/Qt6)
 
 # Clear the cache for found DIRs
-# unset(Qt6_DIR CACHE)
-# foreach(component ${QT6_COMPONENTS})
-#     unset(Qt6${component}_DIR CACHE)
-# endforeach()
+unset(Qt6_DIR CACHE)
+foreach(component ${QT6_COMPONENTS})
+    unset(Qt6${component}_DIR CACHE)
+endforeach()
 
 # Populate the Qt6 configurations
 find_package(Qt6
@@ -63,11 +63,11 @@ foreach(component ${QT6_COMPONENTS})
     if(TARGET Qt6::${component})
 
         # Convert the includes to system includes
-       # get_target_property(system_includes Qt6::${component} INTERFACE_INCLUDE_DIRECTORIES)
-       # set_target_properties(Qt6::${component} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "") # Clear it in case someone refers to it
-       # ly_target_include_system_directories(TARGET Qt6::${component}
-       #     INTERFACE ${system_includes}
-       # )
+        get_target_property(system_includes Qt6::${component} INTERFACE_INCLUDE_DIRECTORIES)
+        set_target_properties(Qt6::${component} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "") # Clear it in case someone refers to it
+        ly_target_include_system_directories(TARGET Qt6::${component}
+            INTERFACE ${system_includes}
+        )
 
         # Alias the target with our prefix
         add_library(3rdParty::Qt::${component} ALIAS Qt6::${component})
@@ -75,30 +75,20 @@ foreach(component ${QT6_COMPONENTS})
 
         # Qt only has debug and release, we map the configurations we use in o3de. We map all the configurations 
         # except debug to release
-       # foreach(conf IN LISTS CMAKE_CONFIGURATION_TYPES)
-       #     string(TOUPPER ${conf} UCONF)
-       #     ly_qt_configuration_mapping(${UCONF} MAPPED_CONF)
-       #     set_target_properties(Qt6::${component} PROPERTIES
-       #         MAP_IMPORTED_CONFIG_${UCONF} ${MAPPED_CONF}
-       #     )
-       # endforeach()
+        foreach(conf IN LISTS CMAKE_CONFIGURATION_TYPES)
+            string(TOUPPER ${conf} UCONF)
+            ly_qt_configuration_mapping(${UCONF} MAPPED_CONF)
+            set_target_properties(Qt6::${component} PROPERTIES
+                MAP_IMPORTED_CONFIG_${UCONF} ${MAPPED_CONF}
+            )
+        endforeach()
 
     endif()
 endforeach()
 
 # Some extra DIR variables we want to hide from GUI
 mark_as_advanced(Qt6_DIR) # Hiding from GUI
-# mark_as_advanced(Qt6LinguistTools_DIR) # Hiding from GUI, this variable comes from the LinguistTools module
-
-# Special case for Qt::Gui, we are using the private headers...
-#ly_target_include_system_directories(TARGET Qt6::Gui
-#   INTERFACE "${Qt6Gui_PRIVATE_INCLUDE_DIRS}"
-#)
-
-# Another special case: Qt:Widgets, we are also using private headers
-#ly_target_include_system_directories(TARGET Qt6::Widgets
-#    INTERFACE "${Qt6Widgets_PRIVATE_INCLUDE_DIRS}"
-#)
+mark_as_advanced(Qt6LinguistTools_DIR) # Hiding from GUI, this variable comes from the LinguistTools module
 
 # Qt plugins/translations/aux files. 
 # We create libraries that wraps them so they get deployed properly.
@@ -143,16 +133,14 @@ mark_as_advanced(AUTORCC_EXECUTABLE) # Hiding from GUI
 set(Qt6Core_RCC_EXECUTABLE "${AUTORCC_EXECUTABLE}" CACHE FILEPATH "Qt's resource compiler, used by qt_add_resources" FORCE)
 mark_as_advanced(Qt6Core_RCC_EXECUTABLE) # Hiding from GUI
 
-# https://cmake.org/cmake/help/latest/manual/cmake-qt.7.html#cmake-qt-7
+# We don't use AUTOUIC, AUTOMOC or AUTORCC from cmake
+# They all use highly custom behavior which is hard to debug when things go wrong (and currently none of them work against O3DE)
+# Instead we call the QT generation .exe directly as you would with any other build system
+# This is easy to maintain, to understand, and easy to port
 
 #! ly_qt_uic_target: handles qt's ui files by injecting uic generation
-#
-# AUTOUIC has issues to detect changes in UIC files and trigger regeneration:
-# https://gitlab.kitware.com/cmake/cmake/-/issues/18741
-# So instead, we are going to manually wrap the files. We dont use qt_wrap_ui because
-# it outputs to ${CMAKE_CURRENT_BINARY_DIR}/ui_${outfile}.h and we want to follow the
-# same folder structure that AUTOUIC uses
-#
+#! You are expected to include the generated ui file in your code to use the generated classes
+#! Output format is "YourFolder/ui_YourFileName.h"
 function(ly_qt_uic_target TARGET all_ui_sources)
     list(FILTER all_ui_sources INCLUDE REGEX "^.*\\.ui$")
     if(NOT all_ui_sources)
@@ -216,6 +204,8 @@ function(ly_qt_uic_target TARGET all_ui_sources)
 endfunction()
 
 #! ly_qt_qrc_target: handles qt's .qrc files
+#! The .qrc file name that you use must be unique in your compilation module
+#! You have to call Q_INIT_RESOURCE(YOUR_QRC_NAME) in a .cpp file to load it
 function(ly_qt_qrc_target TARGET all_qrc_sources)
     list(FILTER all_qrc_sources INCLUDE REGEX "^.*\\.qrc$")
     if(NOT all_qrc_sources)
@@ -281,10 +271,13 @@ function(ly_qt_qrc_target TARGET all_qrc_sources)
 endfunction()
 
 #! ly_qt_moc_target: handles qt's .h files by injecting moc generation
+#! Detect all of your .h/.hxx files with Q_OBJECT macro. Q_OBJECT instead of .cpp files won't be catched.
+#! You don't need to include the generated moc file anywhere
+#! (old code might include them at the end of their .cpp, this is legacy and should be removed).
 function(ly_qt_moc_target TARGET all_moc_sources)
     list(FILTER all_moc_sources INCLUDE REGEX "^.*\\.(h|hxx)$")
     if(NOT all_moc_sources)
-        message("Target ${TARGET} contains AUTOMOC but doesnt have any .h file")
+        message("Target ${TARGET} contains AUTOMOC but doesn't have any Q_OBJECT macro in a .h or .hxx file")
         return()
     endif()
 
@@ -350,4 +343,3 @@ function(ly_qt_moc_target TARGET all_moc_sources)
     target_include_directories(${TARGET} PRIVATE ${new_includes})
 
 endfunction()
-

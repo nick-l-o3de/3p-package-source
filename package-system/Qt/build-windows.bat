@@ -50,6 +50,8 @@ set _OPTS=-prefix %TARGET_INSTALL_ROOT% ^
     -opensource ^
     -confirm-license ^
     -no-feature-accessibility ^
+    -opengl dynamic ^
+    -openssl-linked ^
     -- -Wno-dev
 
 cmd /c ""%BUILD_ROOT%\configure.bat" %_OPTS%" || goto FAILURE
