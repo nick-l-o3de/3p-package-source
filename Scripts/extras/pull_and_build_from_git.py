@@ -95,6 +95,8 @@ The following keys can exist at the root level or the target-platform level:
 * clean_between_configurations            : (optional), default False.  If True, the build folder will be erased between compiling
                                             different configurations.
 
+* set_env_vars                            : dictionary of env vars to set { "key" : "value" , ... }
+
 The following keys can only exist at the target platform level as they describe the specifics for that platform.
 
 * cmake_generate_args                     : The cmake generation arguments (minus the build folder target or any configuration) for generating
@@ -303,6 +305,7 @@ class PackageInfo(object):
         self.cmake_install_filter = _get_value("cmake_install_filter", required=False, default=[])
         self.custom_toolchain_file = _get_value("custom_toolchain_file", required=False)
         self.clean_between_configurations = _get_value("clean_between_configurations", required=False, default=False)
+        self.set_env_vars = _get_value("set_env_vars", required=False, default={})
 
         if self.cmake_find_template and self.cmake_find_source:
             raise BuildError("Bad build config file. 'cmake_find_template' and 'cmake_find_source' cannot both be set in the configuration.")
@@ -757,6 +760,8 @@ class BuildInfo(object):
 
         install_target_folder = install_target_folder.resolve()
 
+        env_to_use = self.create_custom_env()
+
         can_skip_generate = False
 
         for config in self.build_configs:
@@ -824,6 +829,7 @@ class BuildInfo(object):
                 call_result = subprocess.run(subp_args(cmake_generate_cmd),
                                              shell=True,
                                              capture_output=False,
+                                             env=env_to_use,
                                              cwd=str(self.build_folder.parent.resolve()))
                 if call_result.returncode != 0:
                     raise BuildError(f"Error generating project for platform {self.package_info.platform_name}")
@@ -846,6 +852,7 @@ class BuildInfo(object):
             call_result = subprocess.run(subp_args(cmake_build_cmd),
                                          shell=True,
                                          capture_output=False,
+                                         env=env_to_use,
                                          cwd=str(self.build_folder.parent.resolve()))
             if call_result.returncode != 0:
                 raise BuildError(f"Error building project for platform {self.package_info.platform_name}")
@@ -856,6 +863,7 @@ class BuildInfo(object):
             call_result = subprocess.run(subp_args(cmake_install_cmd),
                                             shell=True,
                                             capture_output=False,
+                                            env=env_to_use,
                                             cwd=str(self.build_folder.parent.resolve()))
             if call_result.returncode != 0:
                 raise BuildError(f"Error installing project for platform {self.package_info.platform_name}")
@@ -894,6 +902,12 @@ class BuildInfo(object):
             for package_name, _, subfoldername in self.package_info.depends_on_packages:
                 package_folder_list.append(str( (self.base_temp_folder / package_name / subfoldername).resolve().absolute()))
             custom_env['DOWNLOADED_PACKAGE_FOLDERS'] = ';'.join(package_folder_list)
+
+        custom_env_vars = self.package_info.set_env_vars
+        for key, value in custom_env_vars.items():
+            print(f"  Adding Custom environment variable {key} = {value}")
+            custom_env[key] = value
+
         return custom_env
 
     def build_and_install_custom(self):
