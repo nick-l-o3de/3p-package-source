@@ -9,7 +9,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 PROJECT(test_OpenImageIO VERSION 1.0 LANGUAGES C CXX)
-
+set(CMAKE_CXX_STANDARD 17)
 find_package(OpenImageIO)
 
 add_executable(test_OpenImageIO test_OpenImageIO.cpp)

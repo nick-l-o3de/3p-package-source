@@ -13,18 +13,10 @@
 #include <OpenImageIO/imageio.h>
 #include <OpenImageIO/imagebufalgo.h>
 
-// Test include for OpenColorIO as well
-#include <OpenColorIO/OpenColorIO.h>
-
 bool testReadingImage()
 {
     using namespace OIIO;
-    namespace OCIO = OCIO_NAMESPACE;
 
-    // Try retrieving the OCIO global config
-    auto config = OCIO::GetCurrentConfig();
-
-    printf("All is ok\n");
     const char* filename = "base_Log2-48nits_16_LUT.exr";
     auto inp = ImageInput::open(filename);
     if (!inp)
@@ -65,6 +57,9 @@ bool testReadingImage()
     }
 
     inp->close();
+
+    printf("testReadingImage - All is ok\n");
+
     return true;
 }
 
@@ -99,6 +94,8 @@ bool testWritingImage()
 
     remove("temp_save_image.png");
 
+    printf("testWritingImage - All is ok\n");
+    
     return true;
 }
 
@@ -134,6 +131,8 @@ bool testWritingImage_tif_float() // one channel 32-bit-float (4 bytes per chann
 
     remove("temp_save_image.tif");
 
+    printf("testWritingImage_tif_float - All is ok\n");
+
     return true;
 }
 
@@ -155,6 +154,7 @@ int main()
         return 1;
     }
 
+    printf("main() - All is ok\n");
     
     return 0;
 }

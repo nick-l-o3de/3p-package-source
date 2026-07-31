@@ -92,6 +92,8 @@ The following keys can exist at the root level or the target-platform level:
                                             install tree will be copied to the target package.
                                             This field can exist at the root but also at individual platform target level.
 
+* clean_between_configurations            : (optional), default False.  If True, the build folder will be erased between compiling
+                                            different configurations.
 
 The following keys can only exist at the target platform level as they describe the specifics for that platform.
 
@@ -155,6 +157,18 @@ The following keys can only exist at the target platform level as they describe 
                                                file hash - The hex-string of the fingerprint to validate the download with. If this is left blank, no validation
                                                            will be done, instead it will be calculated on the downloaded package and printed to the console.
                                                hash algorithm - The hash algorithm to use to calculate the file hash.
+
+* additional_src_files                   : individual files to copy from the local folder into
+                                           the temp src folder before build.
+                                           elements in this list can either be a string
+                                           filename,
+                                           or a list of 2 elements, the first being the string
+                                           filename, and the second being a relative path from
+                                           temp.
+                                           E.g:
+                                           [  "extrafile.txt", "anotherfile.txt" ] - copied into temp/src/anotherfile.txt
+                                           [ [ "extrafile.txt", "dest/foo.txt"],   - copied into temp/dest/foo.txt
+                                        [ "anotherfile.txt" ] - copied into temp/src/bar.txt
 
 
 Note about environment variables:
@@ -288,6 +302,7 @@ class PackageInfo(object):
         self.extra_files_to_copy = _get_value("extra_files_to_copy", required=False)
         self.cmake_install_filter = _get_value("cmake_install_filter", required=False, default=[])
         self.custom_toolchain_file = _get_value("custom_toolchain_file", required=False)
+        self.clean_between_configurations = _get_value("clean_between_configurations", required=False, default=False)
 
         if self.cmake_find_template and self.cmake_find_source:
             raise BuildError("Bad build config file. 'cmake_find_template' and 'cmake_find_source' cannot both be set in the configuration.")
@@ -394,6 +409,9 @@ def delete_folder(folder):
         print(f"Expected a folder, but found a file: {path_folder}")
     if not path_folder.is_dir():
         return
+
+    if os.path.dirname(path_folder) == path_folder: # is it the root folder?
+        print(f"Was told to erase folder {path_folder} but that seems like a bad idea.")
 
     if platform.system() == 'Windows':
         call_result = subprocess.run(subp_args(['rmdir', '/Q', '/S', str(path_folder)]),
@@ -626,17 +644,6 @@ class BuildInfo(object):
         else:
             raise BuildError(f"Missing both 'git_url' and 'src_package_url' from the build config")
 
-
-        if self.package_info.additional_src_files:
-            for additional_src in self.package_info.additional_src_files:
-                additional_src_path = self.base_folder / additional_src
-                if not additional_src_path.is_file():
-                    raise BuildError(f"Invalid additional src file: : {additional_src}")
-                additional_tgt_path = self.src_folder / additional_src
-                if additional_tgt_path.is_file():
-                    additional_tgt_path.unlink()
-                shutil.copy2(str(additional_src_path), str(additional_tgt_path))
-
         # Check/Validate the license file from the package, and copy over to install path
         if self.package_info.package_license_file:
             package_license_src = self.src_folder / self.package_info.package_license_file
@@ -704,6 +711,27 @@ class BuildInfo(object):
                 extracted_package_path = extract_package(src_package_file=downloaded_package_file,
                                                          target_folder=self.base_temp_folder)
 
+        # finally, copy the additioanl src files if any, so they can overwrite anything above
+        if self.package_info.additional_src_files:
+            for additional_src in self.package_info.additional_src_files:
+                additional_src_src = ""
+                additional_src_tgt = ""
+
+                if isinstance(additional_src, list):
+                    additional_src_src = additional_src[0]
+                    additional_src_tgt = self.base_temp_folder / additional_src[1]
+                else:
+                    additional_src_src = additional_src
+                    additional_src_tgt = self.src_folder / additional_src_src
+
+                additional_src_path = self.base_folder / additional_src_src
+                if not additional_src_path.is_file():
+                    raise BuildError(f"Invalid additional src file: : {additional_src_src}")
+                if additional_src_tgt.is_file():
+                    additional_src_tgt.unlink()
+                print(f"Copying additional_src_file {additional_src_src} --> {additional_src_tgt}")
+                shutil.copy2(str(additional_src_path), str(additional_src_tgt))
+
 
 
 
@@ -740,6 +768,9 @@ class BuildInfo(object):
                     # Can skip generate the next time since there is only 1 unique cmake generation
                     can_skip_generate = True
 
+                if self.package_info.clean_between_configurations:
+                    can_skip_generate = False
+
                 # if there is a cmake_generate_args_common key in the build config, then start with that.
                 if self.package_info.cmake_generate_args_common:
                     cmake_generator_args = cmake_generator_args + self.package_info.cmake_generate_args_common
@@ -754,6 +785,11 @@ class BuildInfo(object):
                 cmake_command = self.cmake_command
                 if self.package_info.platform_name == EMSCRIPTEN_PLATFORM:
                     cmake_command = 'emcmake ' + self.cmake_command
+
+                if self.package_info.clean_between_configurations:
+                    folder_to_delete = self.build_folder.resolve()
+                    print(f"Cleaning {folder_to_delete} since clean_between_configurations is set")
+                    delete_folder(folder_to_delete)
 
                 cmake_generate_cmd = [cmake_command,
                                       '-S', str(cmakelists_folder.resolve()),

@@ -1,6 +1,5 @@
-The files in this folder are added to the package being built.
-For example, the LICENSE.TXT file applies to the package that is built, not
-to this repo.  It is copied into the package as part of building it.
+This package of OpenImageIO is meant for use with the Open 3D Engine (O3DE).
 
-For additional LICENSE files for the private build dependencies of
-these libraries, see the `privatedeps` folder.
+The source code of OpenImageIO is licensed as per LICENSE.MD under Apache-2.0,
+but please note that OpenImageIO imports many third party libraries.
+You can read about them in THIRD-PARTY.md
