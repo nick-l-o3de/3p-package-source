@@ -6,9 +6,7 @@
 #
 #
 
-if (TARGET 3rdParty::OpenEXR)
-    return()
-endif()
+# This version of OpenEXR needs to work with and without O3DE's macros and scripts
 
 include(${CMAKE_CURRENT_LIST_DIR}/o3de_package_utilities.cmake)
 

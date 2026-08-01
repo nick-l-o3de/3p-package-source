@@ -292,7 +292,7 @@ class PackageInfo(object):
         self.git_commit = _get_value("git_commit", required=False)
         self.cmake_find_template = _get_value("cmake_find_template", required=False)
         self.cmake_find_source = _get_value("cmake_find_source", required=False)
-        self.cmake_find_target = _get_value("cmake_find_target")
+        self.cmake_find_target = _get_value("cmake_find_target", required=False)
         self.cmake_find_template_custom_indent = _get_value("cmake_find_template_custom_indent", default=1)
         self.additional_src_files = _get_value("additional_src_files", required=False)
         self.depends_on_packages = _get_value("depends_on_packages", required=False)
@@ -309,9 +309,6 @@ class PackageInfo(object):
 
         if self.cmake_find_template and self.cmake_find_source:
             raise BuildError("Bad build config file. 'cmake_find_template' and 'cmake_find_source' cannot both be set in the configuration.")
-        if not self.cmake_find_template and not self.cmake_find_source:
-            raise BuildError("Bad build config file. 'cmake_find_template' or 'cmake_find_source' must be set in the configuration.")
-
 
     def write_package_info(self, install_path):
         """
@@ -477,7 +474,8 @@ class BuildInfo(object):
         """
 
         assert (cmake_find_template is not None and cmake_find_source is None) or \
-                (cmake_find_template is None and cmake_find_source is not None), "Either cmake_find_template or cmake_find_source must be set, but not both"
+                (cmake_find_template is None and cmake_find_source is not None) or \
+                    (cmake_find_template is None and cmake_find_source is None), "cmake_find_template can't be set at the same time as cmake_find_source"
 
         self.package_info = package_info
         self.platform_config = platform_config
@@ -1070,6 +1068,7 @@ class BuildInfo(object):
         """
         Generate the find*.cmake file for the library
         """
+        find_cmake_content = None
 
         if self.cmake_find_template is not None:
 
@@ -1080,6 +1079,10 @@ class BuildInfo(object):
         elif self.cmake_find_source is not None:
             find_cmake_content = self.cmake_find_source.read_text("UTF-8", "ignore")
 
+        if not find_cmake_content:
+            print("No cmake_find_template nor cmake_find_source was provided, not doing cmake gen - make sure to handle it yourself")
+            return
+        
         target_cmake_find_script = self.package_install_root / self.package_info.cmake_find_target
         target_cmake_find_script.write_text(find_cmake_content)
 
@@ -1265,7 +1268,7 @@ def prepare_build(platform_name, base_folder, build_folder, package_root_folder,
             raise BuildError("Invalid 'cmake_find_source' entry in build config")
 
     else:
-        raise BuildError("Bad build config file. 'cmake_find_template' or 'cmake_find_template' must be specified.")
+        print("No cmake find template or source specified - make sure to copy or construct one manually.")
 
     return BuildInfo(package_info=package_info,
                      platform_config=target_platform_config,

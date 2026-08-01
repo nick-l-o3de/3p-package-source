@@ -1,0 +1,81 @@
+{
+   "git_url":"https://github.com/AcademySoftwareFoundation/Imath.git",
+   "git_tag":"v3.2.2",
+   "package_name":"Imath",
+   "package_version":"3.2.2-rev1",
+   "package_url":"https://imath.readthedocs.io/en/latest/",
+   "package_license":"BSD-3-Clause",
+   "package_license_file":"Imath/LICENSE.md",
+   "cmake_build_args_common" : [ 
+      "--parallel"
+   ],
+   "cmake_generate_args_common" : [
+      "-DCMAKE_CXX_STANDARD=17",
+      "-DBUILD_SHARED_LIBS=FALSE",
+      "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+      "-DPYTHON=OFF",
+      "-DPYBIND11=OFF",
+      "-DBUILD_WEBSITE=OFF",
+      "-DBUILD_TESTING=OFF",
+      "-DCMAKE_DEBUG_POSTFIX=_d"
+   ],
+   "cmake_install_filter":[
+      "*.h",
+      "*.lib",
+      "*.a"
+   ],
+   "extra_files_to_copy": [
+      ["FindImath.cmake", "FindImath.cmake"],
+      ["Imath-config-version.cmake", "Imath-config-version.cmake"],
+      ["Imath-config.cmake", "Imath-config.cmake"]
+   ],
+   "Platforms":{
+      "Windows":{
+         "Windows":{
+            "cmake_generate_args" : [],
+            "build_configs" : ["Debug","Release"]
+         },
+         "Android":{
+            "build_configs" : ["Release"],
+            "cmake_generate_args" : [
+               "-G",
+               "\"Ninja Multi-Config\"",
+               "-DCMAKE_TOOLCHAIN_FILE=../../../../Scripts/cmake/Platform/Android/Toolchain_android.cmake"
+            ]
+         }
+      },
+      "Darwin":{
+        "Mac-arm64":{
+            "build_configs" : ["Release"],
+            "cmake_generate_args": [
+               "-G", "Xcode",
+               "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+               "-DCMAKE_TOOLCHAIN_FILE=../../../../Scripts/cmake/Platform/Mac/Toolchain_mac.cmake"
+            ]
+        },
+        "iOS":{
+            "build_configs" : ["Release"],
+            "cmake_generate_args": [
+               "-G", "Xcode",
+               "-DCMAKE_TOOLCHAIN_FILE=../../../../Scripts/cmake/Platform/iOS/Toolchain_ios.cmake"
+            ]
+        }
+      },
+      "Linux":{
+         "Linux":{
+            "build_configs" : ["Release"],
+            "cmake_generate_args": [
+               "-G",
+               "\"Ninja Multi-Config\""
+            ]
+         },
+         "Linux-aarch64": {
+            "build_configs" : ["Release"],
+            "cmake_generate_args": [
+               "-G",
+               "\"Ninja Multi-Config\""
+            ]
+         }
+      }
+   }
+}
