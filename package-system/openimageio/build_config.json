@@ -13,9 +13,6 @@
       ["temp/working_install/share/doc/OpenImageIO/THIRD-PARTY.md", "THIRD-PARTY.md"],
       ["distribution/README.md", "README.md"]
    ],
-   "additional_src_files" : [
-      ["FindZLIB.cmake", "zlib-1.2.11-rev5-windows/FindZLIB.cmake"]
-   ],
    "cmake_install_filter":[
       "*.a",
       "*.so",
@@ -38,7 +35,7 @@
       "-DBUILD_SHARED_LIBS=1",
       "-DLOCAL_BUILD_SHARED_LIBS_DEFAULT=OFF",
       "-DLINKSTATIC=ON",
-      "-DOpenImageIO_BUILD_MISSING_DEPS=ALL",
+      "-DOpenImageIO_BUILD_MISSING_DEPS=all",
       "-DENABLE_libjpeg-turbo=1",
       "-DENABLE_libjpeg=0",
       "-DENABLE_OpenJPEG=0",
@@ -72,6 +69,9 @@
             ],
             "custom_test_cmd" : [
                "test_openimageio_windows.cmd"
+            ],
+            "additional_src_files" : [
+               ["FindZLIB.cmake", "zlib-1.2.11-rev5-windows/FindZLIB.cmake"]
             ]
          }
       },
@@ -107,6 +107,9 @@
                "-G",
                "Ninja",
                "-DCMAKE_BUILD_TYPE=Release"
+            ],
+            "additional_src_files" : [
+               ["FindZLIB.cmake", "zlib-1.2.11-rev5-linux/FindZLIB.cmake"]
             ]
          },
          "Linux-aarch64":{
@@ -124,6 +127,9 @@
             ],
             "custom_test_cmd" : [
                "test_openimageio_linux.sh"
+            ],
+            "additional_src_files" : [
+               ["FindZLIB.cmake", "zlib-1.2.11-rev5-linux-aarch64/FindZLIB.cmake"]
             ]
          }
       }

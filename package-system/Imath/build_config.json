@@ -26,14 +26,17 @@
    ],
    "extra_files_to_copy": [
       ["FindImath.cmake", "FindImath.cmake"],
-      ["Imath-config-version.cmake", "Imath-config-version.cmake"],
-      ["Imath-config.cmake", "Imath-config.cmake"]
+      ["imath-config-version.cmake", "imath-config-version.cmake"],
+      ["imath-config.cmake", "imath-config.cmake"]
    ],
    "Platforms":{
       "Windows":{
          "Windows":{
             "cmake_generate_args" : [],
-            "build_configs" : ["Debug","Release"]
+            "build_configs" : ["Debug","Release"],
+            "custom_test_cmd" : [
+               "imath-test-windows.cmd"
+            ]
          },
          "Android":{
             "build_configs" : ["Release"],
@@ -41,6 +44,9 @@
                "-G",
                "\"Ninja Multi-Config\"",
                "-DCMAKE_TOOLCHAIN_FILE=../../../../Scripts/cmake/Platform/Android/Toolchain_android.cmake"
+            ],
+            "custom_test_cmd" : [
+               "imath-test-android.cmd"
             ]
          }
       },
@@ -51,6 +57,9 @@
                "-G", "Xcode",
                "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
                "-DCMAKE_TOOLCHAIN_FILE=../../../../Scripts/cmake/Platform/Mac/Toolchain_mac.cmake"
+            ],
+            "custom_test_cmd" : [
+               "./imath-test-mac.sh"
             ]
         },
         "iOS":{
@@ -58,6 +67,9 @@
             "cmake_generate_args": [
                "-G", "Xcode",
                "-DCMAKE_TOOLCHAIN_FILE=../../../../Scripts/cmake/Platform/iOS/Toolchain_ios.cmake"
+            ],
+            "custom_test_cmd" : [
+               "./imath-test-ios.sh"
             ]
         }
       },
@@ -67,6 +79,9 @@
             "cmake_generate_args": [
                "-G",
                "\"Ninja Multi-Config\""
+            ],
+            "custom_test_cmd" : [
+               "./imath-test-linux.sh"
             ]
          },
          "Linux-aarch64": {
@@ -74,6 +89,9 @@
             "cmake_generate_args": [
                "-G",
                "\"Ninja Multi-Config\""
+            ],
+            "custom_test_cmd" : [
+               "./imath-test-linux.sh"
             ]
          }
       }

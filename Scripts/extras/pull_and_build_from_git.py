@@ -817,7 +817,7 @@ class BuildInfo(object):
                     cmake_module_path = ';'.join(paths_to_join).replace('\\', '/')
 
                 if cmake_module_path:
-                    cmake_generate_cmd.extend([f"-DCMAKE_MODULE_PATH={cmake_module_path}"])
+                    cmake_generate_cmd.extend([f"-DCMAKE_MODULE_PATH=\"{cmake_module_path}\""])
 
                 cmake_generate_cmd.extend(cmake_generator_args)
 

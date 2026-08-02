@@ -113,7 +113,8 @@
          "Linux":{
             "build_configs" : ["release"],
             "depends_on_packages" :[ 
-                ["zlib-1.2.11-rev5-linux", "9be5ea85722fc27a8645a9c8a812669d107c68e6baa2ca0740872eaeb6a8b0fc", ""]
+                ["zlib-1.2.11-rev5-linux", "9be5ea85722fc27a8645a9c8a812669d107c68e6baa2ca0740872eaeb6a8b0fc", ""],
+                ["Imath-3.2.2-rev1-linux", "399e485633a7c64075a2ca61c32f63241402a3f628a6969a4347ef644bcf7a30", ""]
            ],
             "cmake_generate_args_release":[
                "-G",
