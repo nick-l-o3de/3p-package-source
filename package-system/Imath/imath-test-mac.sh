@@ -27,4 +27,10 @@ cmake -S test/find-using-module -B temp/build_test/find-using-module \
     -DCMAKE_PREFIX_PATH="$DOWNLOADED_PACKAGE_FOLDERS;$PACKAGE_ROOT" \
     -DCMAKE_BUILD_TYPE=Release || exit 1
 
+cmake --build temp/build_test/find-using-config --config Release || exit 1
+cmake --build temp/build_test/find-using-module --config Release || exit 1
+
+./temp/build_test/find-using-config/bin/imath_test || exit 1
+./temp/build_test/find-using-config/bin/imath_test || exit 1
+
 exit 0

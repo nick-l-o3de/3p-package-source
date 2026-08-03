@@ -12,3 +12,6 @@ PROJECT(test_imath VERSION 1.0 LANGUAGES C CXX)
 
 find_package(Imath MODULE REQUIRED)
 
+add_executable(test_imath ${CMAKE_CURRENT_LIST_DIR}/../imathtest.cpp)
+target_link_libraries(test_imath PRIVATE Imath::Imath)
+

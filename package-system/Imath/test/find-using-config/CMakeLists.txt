@@ -13,3 +13,5 @@ PROJECT(test_imath VERSION 1.0 LANGUAGES C CXX)
 #ask for a lower version get the new one just to make sure the comparison works right.
 find_package(Imath CONFIG 3.1.1 REQUIRED)
 
+add_executable(test_imath ${CMAKE_CURRENT_LIST_DIR}/../imathtest.cpp)
+target_link_libraries(test_imath Imath::Imath)

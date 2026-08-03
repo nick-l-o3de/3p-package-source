@@ -38,7 +38,7 @@
             "build_configs" : ["Debug", "Release"],
             "depends_on_packages" :[ 
                ["zlib-1.2.11-rev5-windows", "8847112429744eb11d92c44026fc5fc53caa4a06709382b5f13978f3c26c4cbd", ""],
-               ["Imath-3.2.2-rev1-windows", "476dcdc364455313a0353e1775bef46b5a02b1b27836193902152561118a3e4b", ""]
+               ["Imath-3.2.2-rev1-windows", "55c8ad343896a2cd687baa28acdd257b9adc96d2ab1343699a08592b48bd2d35", ""]
             ],
             "cmake_generate_args":[
                "-DImath_DIR=d:/3ps/package-system/OpenEXR/temp/Imath-3.2.2-rev1-windows"
