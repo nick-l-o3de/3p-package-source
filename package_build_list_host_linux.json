@@ -51,7 +51,8 @@
         "zlib-1.2.11-rev5-linux": "Scripts/extras/pull_and_build_from_git.py ../../package-system/zlib --platform-name Linux --package-root ../../package-system --clean",
         "lz4-1.9.4-rev2-linux": "Scripts/extras/pull_and_build_from_git.py ../../package-system/lz4 --platform-name Linux --package-root ../../package-system/lz4/temp --clean",
         "expat-2.4.2-rev2-linux": "Scripts/extras/pull_and_build_from_git.py ../../package-system/expat --platform-name Linux --package-root ../../package-system/expat/temp --clean",
-        "vulkan-validationlayers-1.2.198-rev1-linux": "Scripts/extras/pull_and_build_from_git.py ../../package-system/vulkan-validationlayers --platform-name Linux --package-root ../../package-system/vulkan-validationlayers/temp --clean"
+        "vulkan-validationlayers-1.2.198-rev1-linux": "Scripts/extras/pull_and_build_from_git.py ../../package-system/vulkan-validationlayers --platform-name Linux --package-root ../../package-system/vulkan-validationlayers/temp --clean",
+        "yaml-cpp-0.9.0-rev1-linux": "Scripts/extras/pull_and_build_from_git.py ../../package-system/yaml-cpp --platform-name Linux --package-root ../../package-system/yaml-cpp/temp --clean"
     },
     "build_from_folder": {
         "assimp-5.4.3-rev2-linux": "package-system/assimp-linux",
@@ -103,6 +104,7 @@
         "zlib-1.2.11-rev5-linux": "package-system/zlib-linux",
         "lz4-1.9.4-rev2-linux": "package-system/lz4/temp/lz4-linux",
         "expat-2.4.2-rev2-linux": "package-system/expat/temp/expat-linux",
-        "vulkan-validationlayers-1.2.198-rev1-linux": "package-system/vulkan-validationlayers/temp/vulkan-validationlayers-linux"
+        "vulkan-validationlayers-1.2.198-rev1-linux": "package-system/vulkan-validationlayers/temp/vulkan-validationlayers-linux",
+        "yaml-cpp-0.9.0-rev1-linux": "package-system/yaml-cpp/temp/yaml-cpp-linux"
     }
 }

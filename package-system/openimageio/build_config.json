@@ -101,7 +101,11 @@
                 ["tiff-4.2.0.15-rev3-linux", "2377f48b2ebc2d1628d9f65186c881544c92891312abe478a20d10b85877409a", ""],
                 ["png-1.6.37-rev2-linux", "5c82945a1648905a5c4c5cee30dfb53a01618da1bf58d489610636c7ade5adf5", ""],
                 ["freetype-2.11.1-rev1-linux", "28bbb850590507eff85154604787881ead6780e6eeee9e71ed09cd1d48d85983", ""],
-                ["zlib-1.2.11-rev5-linux", "9be5ea85722fc27a8645a9c8a812669d107c68e6baa2ca0740872eaeb6a8b0fc", ""]
+                ["zlib-1.2.11-rev5-linux", "9be5ea85722fc27a8645a9c8a812669d107c68e6baa2ca0740872eaeb6a8b0fc", ""],
+                ["Imath-3.2.2-rev1-linux", "a2b843e36f7e7b43aa4f019620f9f5fa92f497564f00ecc29ad0fff66d833634", ""],
+                ["OpenEXR-3.4.13-rev1-linux", "2f2bf7f894c5b34d917bf28499804337d131666646abfa056685b92c58c8963f", ""],
+                ["expat-2.8.2-rev1-linux","781bc37a5d4c6772642ae3b4336fbb250c60fc17d59f52ecec51624414a41b45", ""],
+                ["yaml-cpp-0.9.0-rev1-linux", "3328c3025939d65a18e0b8f46bd464d294e47581d5e25e066abd9918b938ec31", ""]
             ],
             "cmake_generate_args_release":[
                "-G",
@@ -115,10 +119,10 @@
          "Linux-aarch64":{
             "build_configs" : ["release"],
             "depends_on_packages" :[
-                ["tiff-4.2.0.15-rev3-linux-aarch64", "429461014b21a530dcad597c2d91072ae39d937a04b7bbbf5c34491c41767f7f", ""],
-                ["png-1.6.37-rev2-linux-aarch64", "fcf646c1b1b4163000efdb56d7c8f086b6ce0a520da5c8d3ffce4e1329ae798a", ""],
-                ["freetype-2.11.1-rev1-linux-aarch64", "b4e3069acdcdae2f977108679d0986fb57371b9a7d4a3a496ab16909feabcba6", ""],
-                ["zlib-1.2.11-rev5-linux-aarch64", "ce9d1ed2883d77ffc69c7982c078595c1f89ca55ec19d89fe7e6beb05f774775", ""]
+               ["tiff-4.2.0.15-rev3-linux-aarch64", "429461014b21a530dcad597c2d91072ae39d937a04b7bbbf5c34491c41767f7f", ""],
+               ["png-1.6.37-rev2-linux-aarch64", "fcf646c1b1b4163000efdb56d7c8f086b6ce0a520da5c8d3ffce4e1329ae798a", ""],
+               ["freetype-2.11.1-rev1-linux-aarch64", "b4e3069acdcdae2f977108679d0986fb57371b9a7d4a3a496ab16909feabcba6", ""],
+               ["zlib-1.2.11-rev5-linux-aarch64", "ce9d1ed2883d77ffc69c7982c078595c1f89ca55ec19d89fe7e6beb05f774775", ""]
             ],
             "cmake_generate_args_release":[
                "-G",

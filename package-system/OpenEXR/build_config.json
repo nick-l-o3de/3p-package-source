@@ -41,7 +41,7 @@
                ["Imath-3.2.2-rev1-windows", "55c8ad343896a2cd687baa28acdd257b9adc96d2ab1343699a08592b48bd2d35", ""]
             ],
             "cmake_generate_args":[
-               "-DImath_DIR=d:/3ps/package-system/OpenEXR/temp/Imath-3.2.2-rev1-windows"
+               "-DImath_DIR=../Imath-3.2.2-rev1-windows"
             ],
             "custom_test_cmd" : [
                "test_openexr_windows.cmd"
@@ -114,12 +114,13 @@
             "build_configs" : ["release"],
             "depends_on_packages" :[ 
                 ["zlib-1.2.11-rev5-linux", "9be5ea85722fc27a8645a9c8a812669d107c68e6baa2ca0740872eaeb6a8b0fc", ""],
-                ["Imath-3.2.2-rev1-linux", "399e485633a7c64075a2ca61c32f63241402a3f628a6969a4347ef644bcf7a30", ""]
+                ["Imath-3.2.2-rev1-linux", "a2b843e36f7e7b43aa4f019620f9f5fa92f497564f00ecc29ad0fff66d833634", ""]
            ],
             "cmake_generate_args_release":[
                "-G",
                "Ninja",
-               "-DCMAKE_BUILD_TYPE=Release"
+               "-DCMAKE_BUILD_TYPE=Release",
+               "-DImath_DIR=../Imath-3.2.2-rev1-linux"
             ],
             "custom_test_cmd" : [
                "./test_openexr_linux.sh"

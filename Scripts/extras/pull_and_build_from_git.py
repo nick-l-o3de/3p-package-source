@@ -900,10 +900,14 @@ class BuildInfo(object):
             for package_name, _, subfoldername in self.package_info.depends_on_packages:
                 package_folder_list.append(str( (self.base_temp_folder / package_name / subfoldername).resolve().absolute()))
             custom_env['DOWNLOADED_PACKAGE_FOLDERS'] = ';'.join(package_folder_list)
+            print(f"  Adding env var DOWNLOADED_PACKAGE_FOLDERS={custom_env['DOWNLOADED_PACKAGE_FOLDERS']}")
+            path_env_var_sep = ';' if platform.system() == 'Windows' else ':'
+            custom_env['CMAKE_PREFIX_PATH']  = path_env_var_sep.join(package_folder_list)
+            print(f"  Adding env var CMAKE_PREFIX_PATH={custom_env['CMAKE_PREFIX_PATH']}")
 
         custom_env_vars = self.package_info.set_env_vars
         for key, value in custom_env_vars.items():
-            print(f"  Adding Custom environment variable {key} = {value}")
+            print(f"  Adding env var {key} = {value}")
             custom_env[key] = value
 
         return custom_env
