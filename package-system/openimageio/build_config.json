@@ -40,6 +40,7 @@
       "-DENABLE_libjpeg=0",
       "-DENABLE_OpenJPEG=0",
       "-DENABLE_libuhdr=0",
+      "-DOPENIMAGEIO_IMATH_DEPENDENCY_VISIBILITY=PUBLIC",
       "-DUSE_QT=0",
       "-DUSE_PYTHON=0"
    ],
